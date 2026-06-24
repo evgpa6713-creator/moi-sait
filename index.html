@@ -9,11 +9,12 @@
             color: #00d4ff;
             font-family: Arial, sans-serif;
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             margin: 0;
+            padding: 20px;
         }
         h1 {
             font-size: 60px;
@@ -31,26 +32,82 @@
             50% { border-color: transparent; }
             100% { border-color: #00d4ff; }
         }
+        nav {
+            background: #1a1a2e;
+            padding: 15px 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
+        }
+        nav a {
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+        nav a:first-child {
+            color: #00d4ff;
+            font-weight: bold;
+        }
+        nav a:not(:first-child) {
+            color: #aaa;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+        }
+        .btn-blue { background: #00d4ff; color: #0b0f19; }
+        .btn-yellow { background: #ffaa00; color: #0b0f19; }
+        .btn-red { background: #ff6666; color: #fff; }
     </style>
 </head>
 <body>
-  <nav style="
-    background: #1a1a2e;
-    padding: 15px 30px;
-    border-radius: 15px;
-    margin-bottom: 40px;
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
-">
-    <a href="index.html" style="color: #00d4ff; text-decoration: none; font-weight: bold; font-size: 18px; transition: 0.3s;">🏠 Главная</a>
-    <a href="about.html" style="color: #aaa; text-decoration: none; font-size: 18px; transition: 0.3s;">👤 Обо мне</a>
-    <a href="hobby.html" style="color: #aaa; text-decoration: none; font-size: 18px; transition: 0.3s;">🎯 Увлечения</a>
-</nav>
+    <nav>
+        <a href="index.html">🏠 Главная</a>
+        <a href="about.html">👤 Обо мне</a>
+        <a href="hobby.html">🎯 Увлечения</a>
+    </nav>
+
     <h1>я программист</h1>
     <p>мой код меняет мир.</p>
     <p style="font-size: 16px; color: #555;">Вечерний джун. День №1.</p>
-    <button onclick="alert('Ты нажал кнопку!')">Нажми меня</button>
+
+    <!-- Блок для JavaScript -->
+    <div style="margin-top: 30px; text-align: center;">
+        <p id="demo">Нажми на кнопку, чтобы изменить этот текст.</p>
+        <button class="btn-blue" onclick="changeText()">Изменить текст</button>
+        <br><br>
+        <button class="btn-yellow" onclick="countClick()">Нажми меня (счётчик)</button>
+        <br><br>
+        <button class="btn-red" onclick="resetCounter()">Сбросить счётчик</button>
+        <p id="counterDisplay">Количество нажатий: 0</p>
+    </div>
+
+    <button onclick="alert('Ты нажал кнопку!')" style="background: #00d4ff; color: #0b0f19; border: none; border-radius: 8px; padding: 10px 20px; font-size: 18px; cursor: pointer; margin-top: 20px;">Нажми меня (alert)</button>
+
+    <script>
+        let counter = 0;
+
+        function changeText() {
+            document.getElementById('demo').innerHTML = 'Ты только что изменил текст с помощью JavaScript! Молодец! 🚀';
+        }
+
+        function countClick() {
+            counter++;
+            document.getElementById('counterDisplay').innerHTML = 'Количество нажатий: ' + counter;
+        }
+
+        function resetCounter() {
+            counter = 0;
+            document.getElementById('counterDisplay').innerHTML = 'Количество нажатий: 0';
+        }
+    </script>
 </body>
 </html>
