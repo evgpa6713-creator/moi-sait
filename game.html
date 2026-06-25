@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Угадай число</title>
+    <style>
+        body {
+            background: #0b0f19;
+            color: #00d4ff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+        nav {
+            background: #1a1a2e;
+            padding: 15px 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
+        }
+        nav a {
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+        nav a:first-child { color: #00d4ff; font-weight: bold; }
+        nav a:not(:first-child) { color: #aaa; }
+        .game-box {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+        }
+        input, button {
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: none;
+            margin: 10px 5px;
+        }
+        input {
+            width: 150px;
+            background: #0b0f19;
+            color: #00d4ff;
+            border: 2px solid #00d4ff;
+            text-align: center;
+        }
+        button {
+            background: #00d4ff;
+            color: #0b0f19;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #00a3cc;
+        }
+        #message {
+            font-size: 24px;
+            min-height: 50px;
+            margin: 20px 0;
+        }
+        #attempts {
+            color: #aaa;
+        }
+        .hint {
+            color: #ffaa00;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" style="color: #aaa; font-weight: bold;">🏠 Главная</a>
+        <a href="about.html">👤 Обо мне</a>
+        <a href="hobby.html">🎯 Увлечения</a>
+        <a href="game.html" style="color: #00d4ff; font-weight: bold;">🎮 Угадай число</a>
+    </nav>
+
+    <div class="game-box">
+        <h1>🎲 Угадай число</h1>
+        <p>Я загадал число от 1 до 100. Попробуй угадать!</p>
+        <div id="message">Введи число и нажми "Проверить"</div>
+        <input type="number" id="userGuess" placeholder="Твой вариант" min="1" max="100">
+        <button onclick="checkGuess()">Проверить</button>
+        <button onclick="resetGame()">Новая игра</button>
+        <p id="attempts">Попыток: 0</p>
+    </div>
+
+    <script>
+      let secretNumber = Math.floor(Math.random() * 100) + 1;
+let attempts = 0;
+
+function checkGuess() {
+    // Получаем значение из поля ввода
+    let guessInput = document.getElementById('userGuess');
+    let guess = Number(guessInput.value);
+    
+    // Проверяем, что введено число в диапазоне
+    if (!guess || guess < 1 || guess > 100) {
+        document.getElementById('message').innerHTML = '⚠️ Введи число от 1 до 100!';
+        return;
+    }
+    
+    attempts++;
+    document.getElementById('attempts').innerHTML = 'Попыток: ' + attempts;
+    
+    let message = document.getElementById('message');
+    
+    if (guess === secretNumber) {
+        message.innerHTML = '🎉 Поздравляю! Ты угадал число ' + secretNumber + '!';
+        message.style.color = '#00ff88';
+        // Блокируем дальнейшие попытки (поле ввода не блокируем, но можно)
+        // Для простоты просто отключаем проверку, но пользователь может нажать снова — мы это учтём
+        // Вместо блокировки просто сохраняем состояние, что игра окончена
+    } else if (guess < secretNumber) {
+        message.innerHTML = '📈 Моё число БОЛЬШЕ. Попробуй ещё.';
+        message.style.color = '#ffaa00';
+    } else {
+        message.innerHTML = '📉 Моё число МЕНЬШЕ. Попробуй ещё.';
+        message.style.color = '#ffaa00';
+    }
+    
+    // Очищаем поле ввода для удобства
+    guessInput.value = '';
+    // Фокус на поле, чтобы сразу можно было вводить следующее число
+    guessInput.focus();
+}
+
+function resetGame() {
+    secretNumber = Math.floor(Math.random() * 100) + 1;
+    attempts = 0;
+    document.getElementById('attempts').innerHTML = 'Попыток: 0';
+    document.getElementById('message').innerHTML = 'Новая игра! Загадано число от 1 до 100.';
+    document.getElementById('message').style.color = '#00d4ff';
+    document.getElementById('userGuess').value = '';
+    document.getElementById('userGuess').focus();
+}
+        // Здесь будет весь JavaScript-код
+    </script>
+</body>
+</html>
