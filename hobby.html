@@ -20,12 +20,12 @@
             padding-bottom: 10px;
         }
         img {
-            width: 100%;
-            max-width: 400px;
+            max-width: 100%;
+            height: auto;
             border-radius: 15px;
             border: 3px solid #00d4ff;
-            display: block;
             margin: 20px 0;
+            display: block;
         }
         a {
             color: #ff6666;
@@ -35,36 +35,40 @@
         a:hover {
             text-decoration: underline;
         }
-        img {
-         max-width: 100%;
-         height: auto;
-         border-radius: 15px;
-         border: 3px solid #00d4ff;
-         margin: 20px 0;
+        nav {
+            background: #1a1a2e;
+            padding: 15px 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
         }
+        nav a {
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+        nav a:first-child { color: #aaa; font-weight: bold; }
+        nav a:nth-child(2) { color: #aaa; }
+        nav a:nth-child(3) { color: #00d4ff; }
+        nav a:nth-child(4) { color: #aaa; }
     </style>
 </head>
 <body>
-  <nav style="
-    background: #1a1a2e;
-    padding: 15px 30px;
-    border-radius: 15px;
-    margin-bottom: 40px;
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
-">
-    <a href="index.html" style="color: #aaa; text-decoration: none; font-weight: bold; font-size: 18px; transition: 0.3s;">🏠 Главная</a>
-    <a href="about.html" style="color: #aaa; text-decoration: none; font-size: 18px; transition: 0.3s;">👤 Обо мне</a>
-    <a href="hobby.html" style="color: #00d4ff; text-decoration: none; font-size: 18px; transition: 0.3s;">🎯 Увлечения</a>
-    <a href="game.html" style="color: #aaa; text-decoration: none; font-size: 18px; transition: 0.3s;">🎮 Угадай число</a>
-</nav>
+    <nav>
+        <a href="index.html">🏠 Главная</a>
+        <a href="about.html">👤 Обо мне</a>
+        <a href="hobby.html" style="color: #00d4ff; font-weight: bold;">🎯 Увлечения</a>
+        <a href="game.html">🎮 Угадай число</a>
+    </nav>
+
     <h1>Мои увлечения</h1>
     
     <h2>Что я люблю делать:</h2>
     <ul>
-        <li> работа</li>
+        <li>работа</li>
         <li>музыка</li>
         <li>Путешествовать</li>
     </ul>
