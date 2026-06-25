@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои привычки</title>
+    <style>
+        body {
+            background: #0b0f19;
+            color: #00d4ff;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        nav {
+            background: #1a1a2e;
+            padding: 15px 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
+        }
+        nav a {
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+            color: #aaa;
+        }
+        nav a:active { color: #00d4ff; font-weight: bold; }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #00d4ff;
+            padding-bottom: 10px;
+        }
+        .form-container {
+            background: #1a1a2e;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input, textarea {
+            background: #0b0f19;
+            color: #00d4ff;
+            border: 2px solid #00d4ff;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        button {
+            background: #00d4ff;
+            color: #0b0f19;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #00a3cc;
+        }
+        .habit-item {
+            background: #1a1a2e;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 5px solid #00d4ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .habit-info h3 {
+            margin: 0;
+            color: #00d4ff;
+        }
+        .habit-info p {
+            margin: 5px 0;
+            color: #aaa;
+        }
+        .delete-btn {
+            background: #ff6666;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: auto;
+        }
+        .delete-btn:hover {
+            background: #ff3333;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">🏠 Главная</a>
+        <a href="about.html">👤 Обо мне</a>
+        <a href="hobby.html">🎯 Увлечения</a>
+        <a href="game.html">🎮 Угадай число</a>
+        <a href="habits.html" style="color: #00d4ff; font-weight: bold;">📋 Привычки</a>
+    </nav>
+
+    <h1>📋 Трекер привычек</h1>
+
+    <div class="form-container">
+        <h2>Добавить привычку</h2>
+        <input type="text" id="habitName" placeholder="Название привычки (например: Читать книги)">
+        <textarea id="habitDescription" placeholder="Краткое описание (по желанию)"></textarea>
+        <input type="text" id="habitFrequency" placeholder="Периодичность (например: Ежедневно / По понедельникам)">
+        <button onclick="addHabit()">➕ Добавить привычку</button>
+    </div>
+
+    <h2>Мои привычки</h2>
+    <div id="habitsList">
+        <p style="color: #555;">Здесь будут появляться твои привычки...</p>
+    </div>
+
+    <script>
+        let habits = [];
+
+        window.onload = function() {
+            const saved = localStorage.getItem('habits');
+            if (saved) {
+                habits = JSON.parse(saved);
+                renderHabits();
+            }
+        };
+
+        function addHabit() {
+            const nameInput = document.getElementById('habitName');
+            const descInput = document.getElementById('habitDescription');
+            const freqInput = document.getElementById('habitFrequency');
+
+            const name = nameInput.value.trim();
+            const description = descInput.value.trim();
+            const frequency = freqInput.value.trim();
+
+            if (name === '') {
+                alert('Название привычки обязательно!');
+                return;
+            }
+
+            const habit = {
+                id: Date.now(),
+                name: name,
+                description: description || 'Без описания',
+                frequency: frequency || 'Не указано',
+                createdAt: new Date().toLocaleDateString()
+            };
+
+            habits.push(habit);
+            localStorage.setItem('habits', JSON.stringify(habits));
+
+            nameInput.value = '';
+            descInput.value = '';
+            freqInput.value = '';
+
+            renderHabits();
+        }
+
+        function deleteHabit(index) {
+            if (confirm('Удалить привычку?')) {
+                habits.splice(index, 1);
+                localStorage.setItem('habits', JSON.stringify(habits));
+                renderHabits();
+            }
+        }
+
+        function renderHabits() {
+            const list = document.getElementById('habitsList');
+
+            if (habits.length === 0) {
+                list.innerHTML = '<p style="color: #555;">Пока нет привычек. Добавь первую!</p>';
+                return;
+            }
+
+            let html = '';
+            habits.forEach((habit, index) => {
+                html += `
+                    <div class="habit-item">
+                        <div class="habit-info">
+                            <h3>${habit.name}</h3>
+                            <p>${habit.description}</p>
+                            <p style="font-size: 14px; color: #666;">Периодичность: ${habit.frequency}</p>
+                            <p style="font-size: 12px; color: #444;">Добавлено: ${habit.createdAt}</p>
+                        </div>
+                        <button class="delete-btn" onclick="deleteHabit(${index})">✖ Удалить</button>
+                    </div>
+                `;
+            });
+
+            list.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
