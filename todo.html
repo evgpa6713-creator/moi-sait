@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список дел</title>
+    <style>
+        body {
+            background: #0b0f19;
+            color: #00d4ff;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        nav {
+            background: #1a1a2e;
+            padding: 15px 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
+        }
+        nav a {
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+            color: #aaa;
+        }
+        nav a:hover { color: #00d4ff; }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #00d4ff;
+            padding-bottom: 10px;
+        }
+        .form-container {
+            background: #1a1a2e;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input, select {
+            background: #0b0f19;
+            color: #00d4ff;
+            border: 2px solid #00d4ff;
+        }
+        button {
+            background: #00d4ff;
+            color: #0b0f19;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #00a3cc;
+        }
+        .todo-item {
+            background: #1a1a2e;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid #00d4ff;
+        }
+        .todo-item.completed {
+            border-left-color: #00ff88;
+            opacity: 0.6;
+        }
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+        }
+        .todo-info {
+            flex: 1;
+        }
+        .todo-text {
+            font-size: 18px;
+        }
+        .todo-meta {
+            font-size: 14px;
+            color: #888;
+        }
+        .todo-actions button {
+            width: auto;
+            padding: 5px 12px;
+            margin-left: 5px;
+            font-size: 14px;
+        }
+        .complete-btn {
+            background: #00ff88;
+            color: #0b0f19;
+        }
+        .complete-btn:hover {
+            background: #00cc66;
+        }
+        .delete-btn {
+            background: #ff6666;
+            color: #fff;
+        }
+        .delete-btn:hover {
+            background: #ff3333;
+        }
+        .filter-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .filter-btn {
+            background: #1a1a2e;
+            color: #aaa;
+            border: 2px solid #1a1a2e;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .filter-btn.active {
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+        .filter-btn:hover {
+            border-color: #00d4ff;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">🏠 Главная</a>
+        <a href="about.html">👤 Обо мне</a>
+        <a href="hobby.html">🎯 Увлечения</a>
+        <a href="game.html">🎮 Угадай число</a>
+        <a href="habits.html">📋 Привычки</a>
+        <a href="todo.html" style="color: #00d4ff; font-weight: bold;">✅ Список дел</a>
+    </nav>
+
+    <h1>✅ Список дел</h1>
+
+    <!-- Форма добавления -->
+    <div class="form-container">
+        <h2>Добавить задачу</h2>
+        <input type="text" id="todoText" placeholder="Что нужно сделать?">
+        <input type="date" id="todoDate">
+        <select id="todoPriority">
+            <option value="Низкий">🟢 Низкий</option>
+            <option value="Средний" selected>🟡 Средний</option>
+            <option value="Высокий">🔴 Высокий</option>
+        </select>
+        <button onclick="addTodo()">➕ Добавить задачу</button>
+    </div>
+
+    <!-- Фильтры -->
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="setFilter('all')">Все</button>
+        <button class="filter-btn" onclick="setFilter('active')">Активные</button>
+        <button class="filter-btn" onclick="setFilter('completed')">Выполненные</button>
+    </div>
+
+    <!-- Список задач -->
+    <div id="todoList">
+        <p style="color: #555;">Здесь будут твои задачи...</p>
+    </div>
+
+    <script>
+      let todos = [];
+let currentFilter = 'all';
+
+// Загрузка при открытии
+window.onload = function() {
+    const saved = localStorage.getItem('todos');
+    if (saved) {
+        todos = JSON.parse(saved);
+        renderTodos();
+    }
+};
+
+function addTodo() {
+    const textInput = document.getElementById('todoText');
+    const dateInput = document.getElementById('todoDate');
+    const prioritySelect = document.getElementById('todoPriority');
+
+    const text = textInput.value.trim();
+    const date = dateInput.value;
+    const priority = prioritySelect.value;
+
+    if (text === '') {
+        alert('Введите текст задачи!');
+        return;
+    }
+
+    const todo = {
+        id: Date.now(),
+        text: text,
+        date: date || 'Без даты',
+        priority: priority,
+        completed: false,
+        createdAt: new Date().toLocaleDateString()
+    };
+
+    todos.push(todo);
+    saveAndRender();
+
+    textInput.value = '';
+    dateInput.value = '';
+    prioritySelect.value = 'Средний';
+}
+
+function toggleTodo(id) {
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+        todo.completed = !todo.completed;
+        saveAndRender();
+    }
+}
+
+function deleteTodo(id) {
+    if (confirm('Удалить задачу?')) {
+        todos = todos.filter(t => t.id !== id);
+        saveAndRender();
+    }
+}
+
+function setFilter(filter) {
+    currentFilter = filter;
+    // Обновляем активную кнопку
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`.filter-btn[onclick="setFilter('${filter}')"]`).classList.add('active');
+    renderTodos();
+}
+
+function saveAndRender() {
+    localStorage.setItem('todos', JSON.stringify(todos));
+    renderTodos();
+}
+
+function renderTodos() {
+    const list = document.getElementById('todoList');
+
+    // Фильтрация
+    let filteredTodos = todos;
+    if (currentFilter === 'active') {
+        filteredTodos = todos.filter(t => !t.completed);
+    } else if (currentFilter === 'completed') {
+        filteredTodos = todos.filter(t => t.completed);
+    }
+
+    if (filteredTodos.length === 0) {
+        list.innerHTML = `<p style="color: #555;">Нет задач. Добавь первую!</p>`;
+        return;
+    }
+
+    let html = '';
+    filteredTodos.forEach(todo => {
+        const priorityColor = todo.priority === 'Высокий' ? '#ff6666' :
+                              todo.priority === 'Средний' ? '#ffaa00' : '#00ff88';
+        const completedClass = todo.completed ? 'completed' : '';
+
+        html += `
+            <div class="todo-item ${completedClass}">
+                <div class="todo-info">
+                    <div class="todo-text">${todo.text}</div>
+                    <div class="todo-meta">
+                        📅 ${todo.date} &nbsp;|&nbsp; 
+                        <span style="color: ${priorityColor};">${todo.priority}</span>
+                        &nbsp;|&nbsp; Добавлено: ${todo.createdAt}
+                    </div>
+                </div>
+                <div class="todo-actions">
+                    <button class="complete-btn" onclick="toggleTodo(${todo.id})">
+                        ${todo.completed ? '↩️ Вернуть' : '✅ Выполнить'}
+                    </button>
+                    <button class="delete-btn" onclick="deleteTodo(${todo.id})">✖</button>
+                </div>
+            </div>
+        `;
+    });
+
+    list.innerHTML = html;
+}  // Здесь будет JavaScript
+    </script>
+</body>
+</html>
